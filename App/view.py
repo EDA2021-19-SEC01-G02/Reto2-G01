@@ -26,6 +26,8 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 
+from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
 
 """
 La vista se encarga de la interacción con el usuario
@@ -71,10 +73,11 @@ while True:
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
         print("Cargando información de los archivos ....")
-        cont = controller.initCatalog()
-        controller.loadData(cont)
-        print('Videos cargados: ' + str(controller.videosSize(cont)))
-        print('Categorias cargados: ' + str(controller.categoriesSize(cont)))
+        catalog = controller.initCatalog()
+        controller.loadData(catalog)
+        print('Videos cargados: ' + str(controller.videosSize(catalog)))
+        print('Categorias cargadas: ' + str(controller.categoriesSize(catalog)))
+
     elif int(inputs[0]) == 2:
         pass
 

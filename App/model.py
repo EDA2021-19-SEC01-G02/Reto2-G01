@@ -49,43 +49,56 @@ def newCatalog():
     """
     catalog = {'videos': None,
                'categories': None}
-    """
-    Esta lista contiene todo los libros encontrados
-    en los archivos de carga.  Estos libros no estan
-    ordenados por ningun criterio.  Son referenciados
-    por los indices creados a continuacion.
-    """
-    catalog['videos'] = lt.newList('SINGLE_LINKED', compareVideos)
 
-    """
-    Este indice crea un map cuya llave es el la categoria
-    """
+    catalog['videos'] = lt.newList('SINGLE_LINKED')
     catalog['categories'] = mp.newMap(32,
                                   maptype='CHAINING',
-                                  loadfactor=4.0,
-                                  comparefunction=compareCategories))
+                                  loadfactor=4.0)
     return catalog
 
 # Funciones para agregar informacion al catalogo
-def addBook(catalog, video):
+
+def addVideo(catalog, video):
     """
     Esta funcion adiciona un video a la lista de videos,
     adicionalmente lo guarda en un Map usando como llave su Id.
-    Adicionalmente se guarda en el indice de autores, una referencia
-    al libro.
     Finalmente crea una entrada en el Map de años, para indicar que este
     libro fue publicaco en ese año.
     """
+    cat = mp.get(catalog['categories'], video['category_id'])
+    
     lt.addLast(catalog['videos'], video)
-    mp.put(catalog['categories'], book['category_id'], video)
+    lt.addLast(cat['value']['videos'], video)
+
+def addCategory(catalog, id, name):
+    """
+    Adiciona una categoría junto con su Id a la lista de categorías.
+    """
+    cat = newCategory(id, name)
+    mp.put(catalog['categories'], cat['id'], cat) 
+
+# Funciones para creacion de datos
+
+def newCategory(id, name):
+    """
+    Esta estructura almacena los tags utilizados para marcar libros.
+    """
+    category = {'name': None,
+     'id': None,
+     'videos': None}
+
+    category['name'] = name.lower().strip()
+    category['id'] = id
+    category['videos'] = lt.newList('SINGLE_LINKED')
+
+    return category
 
 # Funciones para creacion de datos
 def videosSize(catalog):
     """
-    Número de videos en el catago
+    Número de videos en el catalogo
     """
     return lt.size(catalog['videos'])
-
 
 def categoriesSize(catalog):
     """
@@ -126,3 +139,8 @@ def getLikedVideos(catalog, category_name,country, numerovideos):
 # Funciones de Comparacion
 # ==============================
 
+def compareVideos(video1,video2):
+    pass
+
+def compareCategories(cat1,cat2):
+    pass

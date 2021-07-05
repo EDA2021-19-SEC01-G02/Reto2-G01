@@ -44,14 +44,15 @@ def loadData(catalog):
     Carga los datos de los archivos y cargar los datos en la
     estructura de datos
     """
-    loadVideos(catalog)
     loadCategories(catalog)
+    loadVideos(catalog)
+    
 
 def loadVideos(catalog):
     """
     Carga los videos del archivo. 
     """
-    videosfile = cf.data_dir + 'videos-large.csv'
+    videosfile = cf.data_dir + 'videos-small.csv'
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for video in input_file:
         model.addVideo(catalog, video)
@@ -77,7 +78,7 @@ def videosSize(catalog):
     return model.videosSize(catalog)
 
 
-def categoriesSize(catalog)::
+def categoriesSize(catalog):
     """
     Numero de categorias cargados al catalogo
     """
