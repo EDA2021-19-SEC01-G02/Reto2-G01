@@ -37,10 +37,31 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("2- Consultar los videos con mas likes")
+    print("3- Consultar  el video trending el mayor numero de dias")
+    print("4- Consultar video trending con percepcion sumamente positiva")
+    print("5- Consultar videos con mas comentarios por tag")
+    print("0- Salir")
 
 catalog = None
+def initCatalog():
+    return controller.initCatalog()
 
+
+def loadData(catalog):
+    """
+    Carga los libros en el catalogo
+    """
+    controller.loadData(catalog)
+
+def printLikedVideos(lista):
+    if lista != None:
+        for i in range(1,lt.size(lista)+1):
+            video = lt.getElement(lista,i)
+            print('trending_date : {} \t title: {} \t channel_title : {} \t publish_time : {} \t views: {} \t likes: {} \t dislikes: {}'
+            .format(video['trending_date'],video['title'],video['channel_title'],video['publish_time'],video['views'],video['likes'],video['dislikes']))
+    else:
+        print('Verifique los datos ingresados.')
 """
 Menu principal
 """
@@ -48,8 +69,12 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        print("Inicializando Catálogo ....")
         print("Cargando información de los archivos ....")
-
+        cont = controller.initCatalog()
+        controller.loadData(cont)
+        print('Videos cargados: ' + str(controller.videosSize(cont)))
+        print('Categorias cargados: ' + str(controller.categoriesSize(cont)))
     elif int(inputs[0]) == 2:
         pass
 
