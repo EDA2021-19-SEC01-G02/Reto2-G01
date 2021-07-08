@@ -72,11 +72,16 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
-        print("Cargando información de los archivos ....")
-        catalog = controller.initCatalog()
-        controller.loadData(catalog)
+        print("Seleccione como quiere que se manejen las colisiones")
+        print("1- Separate Chaining")
+        print("2- Linear Probing")
+        hash = int(input('Seleccione una opción para continuar\n'))
+        catalog = controller.initCatalog(hash)
+        answer= controller.loadData(catalog)
         print('Videos cargados: ' + str(controller.videosSize(catalog)))
         print('Categorias cargadas: ' + str(controller.categoriesSize(catalog)))
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
 
     elif int(inputs[0]) == 2:
         pass

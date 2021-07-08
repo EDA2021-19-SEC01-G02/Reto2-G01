@@ -20,7 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-import time
+import time 
 import tracemalloc
 import config as cf
 import model
@@ -32,11 +32,11 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo de libros
-def initCatalog():
+def initCatalog(hash):
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
-    catalog = model.newCatalog()
+    catalog = model.newCatalog(hash)
     return catalog
 
 # Funciones para la carga de datos
@@ -81,10 +81,38 @@ def loadCategories(catalog):
     Carga todas las categorías del archivo y los agrega a la lista de categorías
     """
     categoryfile = cf.data_dir + 'category-id.csv'
-    input_file = csv.DictReader(open(categoryfile, encoding='utf-8'))
+    input_file = csv.DictReader(open(categoryfile, encoding='utf-8'), delimiter = "\t")
     for cat in input_file:
-        cat['id\tname'] = cat['id\tname'].split("\t")
-        model.addCategory(catalog, cat['id\tname'][0], cat['id\tname'][1])
+        model.addCategory(catalog, cat['id'], cat['name'])
+
+def getTime():
+    """
+    devuelve el instante tiempo de procesamiento en milisegundos
+    """
+    return float(time.perf_counter()*1000)
+
+
+def getMemory():
+    """
+    toma una muestra de la memoria alocada en instante de tiempo
+    """
+    return tracemalloc.take_snapshot()
+
+
+def deltaMemory(start_memory, stop_memory):
+    """
+    calcula la diferencia en memoria alocada del programa entre dos
+    instantes de tiempo y devuelve el resultado en bytes (ej.: 2100.0 B)
+    """
+    memory_diff = stop_memory.compare_to(start_memory, "filename")
+    delta_memory = 0.0
+
+    # suma de las diferencias en uso de memoria
+    for stat in memory_diff:
+        delta_memory = delta_memory + stat.size_diff
+    # de Byte -> kByte
+    delta_memory = delta_memory/1024.0
+    return delta_memory
 
 # Funciones de ordenamiento
 

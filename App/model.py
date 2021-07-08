@@ -38,7 +38,7 @@ los mismos.
 """
 
 # Construccion de modelos
-def newCatalog():
+def newCatalog(hash):
     """ Inicializa el catálogo de videos
 
     Crea una lista vacia para guardar todos los libros
@@ -49,11 +49,16 @@ def newCatalog():
     """
     catalog = {'videos': None,
                'categories': None}
-
     catalog['videos'] = lt.newList('SINGLE_LINKED')
-    catalog['categories'] = mp.newMap(32,
+
+    if hash ==1:
+        catalog['categories'] = mp.newMap(32,
                                   maptype='CHAINING',
                                   loadfactor=4.0)
+    if hash ==2:
+        catalog['categories'] = mp.newMap(32,
+                                  maptype='PROBING',
+                                  loadfactor=0.5) 
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -65,10 +70,10 @@ def addVideo(catalog, video):
     Finalmente crea una entrada en el Map de años, para indicar que este
     libro fue publicaco en ese año.
     """
-    cat = mp.get(catalog['categories'], video['category_id'])
+    cat = me.getValue(mp.get(catalog['categories'], video['category_id']))
     
     lt.addLast(catalog['videos'], video)
-    lt.addLast(cat['value']['videos'], video)
+    lt.addLast(cat['videos'], video)
 
 def addCategory(catalog, id, name):
     """
@@ -89,7 +94,7 @@ def newCategory(id, name):
 
     category['name'] = name.lower().strip()
     category['id'] = id
-    category['videos'] = lt.newList('SINGLE_LINKED')
+    category['videos'] = lt.newList('ARRAY')
 
     return category
 
