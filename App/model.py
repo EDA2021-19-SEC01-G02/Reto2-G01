@@ -54,11 +54,11 @@ def newCatalog(hash):
     if hash ==1:
         catalog['categories'] = mp.newMap(32,
                                   maptype='CHAINING',
-                                  loadfactor=4.0)
+                                  loadfactor=2.0)
     if hash ==2:
         catalog['categories'] = mp.newMap(32,
                                   maptype='PROBING',
-                                  loadfactor=0.5) 
+                                  loadfactor=0.8) 
     return catalog
 
 # Funciones para agregar informacion al catalogo
