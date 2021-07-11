@@ -32,14 +32,18 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo de libros
-def initCatalog(hash):
+
+
+def initCatalog():
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
-    catalog = model.newCatalog(hash)
+    catalog = model.newCatalog()
     return catalog
 
+
 # Funciones para la carga de datos
+
 
 def loadData(catalog):
     """
@@ -71,10 +75,11 @@ def loadVideos(catalog):
     """
     Carga los videos del archivo. 
     """
-    videosfile = cf.data_dir + 'videos-small.csv'
+    videosfile = cf.data_dir + 'videos-large.csv'
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for video in input_file:
         model.addVideo(catalog, video)
+
 
 def loadCategories(catalog):
     """
@@ -83,7 +88,8 @@ def loadCategories(catalog):
     categoryfile = cf.data_dir + 'category-id.csv'
     input_file = csv.DictReader(open(categoryfile, encoding='utf-8'), delimiter = "\t")
     for cat in input_file:
-        model.addCategory(catalog, cat['id'], cat['name'])
+        model.addCategory(catalog, cat['id'], cat['name']) 
+
 
 def getTime():
     """
@@ -130,6 +136,14 @@ def categoriesSize(catalog):
     Numero de categorias cargados al catalogo
     """
     return model.categoriesSize(catalog)
+
+
+def countriesSize(catalog):
+    """
+    Numero de categorias cargados al catalogo
+    """
+    return model.countriesSize(catalog)
+
 
 def getLikedVideos(catalog, category_name,country, numerovideos):
     return model.getLikedVideos(catalog, category_name,country, numerovideos)

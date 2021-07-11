@@ -64,22 +64,24 @@ def printLikedVideos(lista):
             .format(video['trending_date'],video['title'],video['channel_title'],video['publish_time'],video['views'],video['likes'],video['dislikes']))
     else:
         print('Verifique los datos ingresados.')
+
 """
 Menu principal
 """
+
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
-        print("Seleccione como quiere que se manejen las colisiones")
-        print("1- Separate Chaining")
-        print("2- Linear Probing")
-        hash = int(input('Seleccione una opción para continuar\n'))
-        catalog = controller.initCatalog(hash)
+
+        catalog = controller.initCatalog()
         answer= controller.loadData(catalog)
+
         print('Videos cargados: ' + str(controller.videosSize(catalog)))
         print('Categorias cargadas: ' + str(controller.categoriesSize(catalog)))
+        print('Paises cargados: ' + str(controller.countriesSize(catalog)))
+
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{answer[1]:.3f}")
 

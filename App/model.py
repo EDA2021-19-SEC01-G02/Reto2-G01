@@ -38,7 +38,8 @@ los mismos.
 """
 
 # Construccion de modelos
-def newCatalog(hash):
+
+def newCatalog():
     """ Inicializa el catálogo de videos
 
     Crea una lista vacia para guardar todos los libros
@@ -48,18 +49,15 @@ def newCatalog(hash):
     Retorna el catalogo inicializado.
     """
     catalog = {'videos': None,
-               'categories': None}
-    catalog['videos'] = lt.newList('SINGLE_LINKED')
+               'categories': None,
+               'countries': None}
 
-    if hash ==1:
-        catalog['categories'] = mp.newMap(32,
-                                  maptype='CHAINING',
-                                  loadfactor=2.0)
-    if hash ==2:
-        catalog['categories'] = mp.newMap(32,
-                                  maptype='PROBING',
-                                  loadfactor=0.8) 
+    catalog['videos'] = lt.newList('SINGLE_LINKED')
+    catalog['categories'] = mp.newMap(31, maptype='PROBING', loadfactor=0.5)
+    catalog['countries'] = mp.newMap(100, maptype='PROBING', loadfactor=0.5) 
+
     return catalog
+
 
 # Funciones para agregar informacion al catalogo
 
@@ -70,10 +68,19 @@ def addVideo(catalog, video):
     Finalmente crea una entrada en el Map de años, para indicar que este
     libro fue publicaco en ese año.
     """
+    if mp.contains(catalog['countries'], video['country']):
+        country = me.getValue(mp.get(catalog['countries'], video['country'].lower().strip()))
+        lt.addLast(country['videos'], video)
+    else:
+        addCountry(catalog, video['country'].lower().strip())
+        country = me.getValue(mp.get(catalog['countries'], video['country'].lower().strip()))
+        lt.addLast(country['videos'], video)
+
     cat = me.getValue(mp.get(catalog['categories'], video['category_id']))
     
     lt.addLast(catalog['videos'], video)
     lt.addLast(cat['videos'], video)
+
 
 def addCategory(catalog, id, name):
     """
@@ -81,6 +88,15 @@ def addCategory(catalog, id, name):
     """
     cat = newCategory(id, name)
     mp.put(catalog['categories'], cat['id'], cat) 
+
+
+def addCountry(catalog, name):
+    """
+    Adiciona una categoría junto con su Id a la lista de categorías.
+    """
+    country = newCountry(name)
+    mp.put(catalog['countries'], name, country)
+
 
 # Funciones para creacion de datos
 
@@ -98,20 +114,45 @@ def newCategory(id, name):
 
     return category
 
+
+def newCountry(name):
+    """
+    Esta estructura almacena los tags utilizados para marcar libros.
+    """
+    country = {'name': None,
+     'videos': None}
+
+    country['name'] = name
+    country['videos'] = lt.newList('ARRAY')
+
+    return country
+
+
 # Funciones para creacion de datos
+
 def videosSize(catalog):
     """
     Número de videos en el catalogo
     """
     return lt.size(catalog['videos'])
 
+
 def categoriesSize(catalog):
     """
     Numero de categorias en el catalogo
     """
     return mp.size(catalog['categories'])
-    
+
+
+def countriesSize(catalog):
+    """
+    Numero de paises en el catalogo
+    """
+    return mp.size(catalog['countries'])
+
+
 # Funciones de consulta
+
 def getLikedVideos(catalog, category_name,country, numerovideos):
     id = -1000
     sublista = None
@@ -146,6 +187,7 @@ def getLikedVideos(catalog, category_name,country, numerovideos):
 
 def compareVideos(video1,video2):
     pass
+
 
 def compareCategories(cat1,cat2):
     pass
