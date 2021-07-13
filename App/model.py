@@ -54,7 +54,8 @@ def newCatalog():
 
     catalog['videos'] = lt.newList('SINGLE_LINKED')
     catalog['categories'] = mp.newMap(31, maptype='PROBING', loadfactor=0.5)
-    catalog['countries'] = mp.newMap(100, maptype='PROBING', loadfactor=0.5) 
+    catalog['countries'] = mp.newMap(100, maptype='PROBING', loadfactor=0.5)
+    catalog['categories_name'] = mp.newMap(32, maptype='PROBING', loadfactor=0.5) 
 
     return catalog
 
@@ -87,7 +88,8 @@ def addCategory(catalog, id, name):
     Adiciona una categoría junto con su Id a la lista de categorías.
     """
     cat = newCategory(id, name)
-    mp.put(catalog['categories'], cat['id'], cat) 
+    mp.put(catalog['categories'], cat['id'], cat)
+    mp.put(catalog['categories_name'], cat, cat['id'])
 
 
 def addCountry(catalog, name):
@@ -157,18 +159,19 @@ def getLikedVideos(catalog, category_name,country, numerovideos):
     id = -1000
     sublista = None
 
-    for i in range(1, lt.size(catalog['categories'])+1):
-        categoria = lt.getElement(catalog['categories'], i)
-        if categoria['name'].lower() == category_name.lower():
-            id = categoria['category_id']
+    try:
+        id = mp.get(catalog["categories_name"], category_name.lower())
+        id = me.getValue(id)
+    except:
+        print("La categoria no existe")
 
     if id != -1000:   
-        lista_inicial = catalog['videos']
+        lista_inicial = mp.get(catalog['countries'], country)["videos"]
         lista_sortear= lt.newList('ARRAY_LIST')
 
         for j in range(1,lt.size(lista_inicial)+1):
             video = lt.getElement(lista_inicial, j)
-            if video["category_id"] == id and video["country"].lower().strip() == country.lower():   
+            if video["category_id"] == id:   
                 lt.addLast(lista_sortear, video)
 
         lista_sortear = sortVideosLikes(lista_sortear)
@@ -177,10 +180,86 @@ def getLikedVideos(catalog, category_name,country, numerovideos):
             sublista = lt.subList(lista_sortear, 1, numerovideos)
     return sublista
 
+def getSumamentePositiva(catalog, category_name):
+    id = -1000
+    lista_inicial = catalog['videos']
+    lista_sortear= lt.newList('ARRAY_LIST')
+
+    try:
+        id = mp.get(catalog["categories_name"], category_name.lower())
+        id = me.getValue(id)
+    except:
+        print("La categoria no existe")
+
+    if id != -1000:
+        for j in range(1,lt.size(lista_inicial)+1):
+            video = lt.getElement(lista_inicial,j)
+            if int(video["dislikes"])>0:
+                ratio = int(video["likes"])/int(video["dislikes"])
+                if video["category_id"] == id and ratio > 20:
+                    video['ratio'] = ratio
+                    lt.addLast(lista_sortear, video)
+
+    if lt.size(lista_sortear) != 0:
+        return lt.getElement(conteo_trending(lista_sortear),1)
+    else:
+        return None
+    
+def getComentariosVideos(catalog, country, numerovideos, tag):
+    video = -1000
+    lista_inicial = catalog['videos']
+    sublista = None
+
+    try:
+        pais = mp.get(catalog["country"], country.lower())
+        pais = me.getValue(pais)
+    except:
+        print("El pais no existe")
+    lista_pais = pais["videos"]
+    if lt.size(lista_pais) != 0:
+        lista_comentarios = lt.newList('ARRAY_LIST')
+        for j in range(1, lt.size(lista_pais)+1):
+            video_comentarios = lt.getElement(lista_pais, j)
+            tags = str(video_comentarios["tags"])
+
+            if tag.lower() in tags.lower():
+                lt.addLast(lista_comentarios, video_comentarios)
+
+        lista_comentarios = sortVideosComents(lista_comentarios)
+        lista_sortear = getUnicos(lista_comentarios)
+        if numerovideos <= lt.size(lista_sortear):
+            sublista = lt.subList(lista_sortear, 1, numerovideos)
+    return sublista
+
 # Funciones utilizadas para comparar elementos dentro de una lista
+def cmpVideosByLikes(video1, video2):
+    """ Devuelve verdadero (True) si los likes de video1 
+    son menores que los del video2 Args: video1: informacion del 
+    primer video que incluye su valor 'likes'"""
+    return (int(video1['likes'])) > int((video2['likes']))
+
+def cmpVideosByDays(video1, video2):
+    """ Devuelve verdadero (True) si los likes de video1 
+    son menores que los del video2 Args: video1: informacion del 
+    primer video que incluye su valor 'likes'"""
+    return (int(video1['days'])) > int((video2['days']))
+
+def cmpVideosByComments(video1, video2):
+    """ Devuelve verdadero (True) si los likes de video1 
+    son menores que los del video2 Args: video1: informacion del 
+    primer video que incluye su valor 'likes'"""
+    return (int(video1['comment_count'])) > int((video2['comment_count']))
 
 # Funciones de ordenamiento
 
+def sortVideosLikes(lista):
+    return sa.sort(lista,cmpVideosByLikes) 
+
+def sortVideosDays(lista):
+    return sa.sort(lista,cmpVideosByDays)
+    
+def sortVideosComents(lista):
+    return sa.sort(lista,cmpVideosByComments)  
 # ==============================
 # Funciones de Comparacion
 # ==============================
@@ -191,3 +270,5 @@ def compareVideos(video1,video2):
 
 def compareCategories(cat1,cat2):
     pass
+
+

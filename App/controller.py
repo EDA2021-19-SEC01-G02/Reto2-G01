@@ -146,4 +146,13 @@ def countriesSize(catalog):
 
 
 def getLikedVideos(catalog, category_name,country, numerovideos):
-    return model.getLikedVideos(catalog, category_name,country, numerovideos)
+    return model.getLikedVideos(catalog, category_name,country, numerovideos)  
+
+def getAltamentePositiva(catalog, country):
+    return model.getAltamentePositiva(catalog, country)
+
+def getSumamentePositiva(catalog, category_name):
+    return model.getSumamentePositiva(catalog, category_name)    
+
+def getComentariosVideos(catalog, country, numero_videos, tag):
+    return model.getComentariosVideos(catalog, country, numero_videos, tag)
