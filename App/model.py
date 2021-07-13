@@ -180,6 +180,29 @@ def getLikedVideos(catalog, category_name,country, numerovideos):
             sublista = lt.subList(lista_sortear, 1, numerovideos)
     return sublista
 
+def getAltamentePositiva(catalog, country):
+    lista_inicial = catalog['videos']
+    lista_sortear= lt.newList('ARRAY_LIST')
+
+    try:
+        pais = mp.get(catalog["country"], country.lower())
+        pais = me.getValue(pais)
+    except:
+        print("El pais no esta en la base de datos")
+    
+    for i in range(1,lt.size(lista_inicial)+1):
+        video = lt.getElement(lista_inicial, i)
+        if int(video["dislikes"])>0:
+            ratio = int(video["likes"])/int(video["dislikes"])
+            if  video["country"] == pais and ratio > 10:
+                video['ratio'] = ratio  
+                lt.addLast(lista_sortear, video)
+
+    if lt.size(lista_sortear) != 0:
+        return lt.getElement(conteo_trending(lista_sortear),1)
+    else:
+        return None
+
 def getSumamentePositiva(catalog, category_name):
     id = -1000
     lista_inicial = catalog['videos']
@@ -214,7 +237,7 @@ def getComentariosVideos(catalog, country, numerovideos, tag):
         pais = mp.get(catalog["country"], country.lower())
         pais = me.getValue(pais)
     except:
-        print("El pais no existe")
+        print("El pais no esta en la base de datos")
     lista_pais = pais["videos"]
     if lt.size(lista_pais) != 0:
         lista_comentarios = lt.newList('ARRAY_LIST')
