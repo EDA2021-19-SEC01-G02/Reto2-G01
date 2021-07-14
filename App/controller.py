@@ -144,7 +144,102 @@ def countriesSize(catalog):
     """
     return model.countriesSize(catalog)
 
+def timeLikes(catalog, category_name, country, numerovideos):
+    """
+    Carga los datos de los archivos y cargar los datos en la
+    estructura de datos
+    """
+    # TODO: modificaciones para medir el tiempo y memoria
+    delta_time = -1.0
+    delta_memory = -1.0
 
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    getLikedVideos(catalog, category_name,country, numerovideos)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return delta_time, delta_memory
+
+def timeAltamente(catalog, country):
+    """
+    Carga los datos de los archivos y cargar los datos en la
+    estructura de datos
+    """
+    # TODO: modificaciones para medir el tiempo y memoria
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    getAltamentePositiva(catalog, country)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return delta_time, delta_memory
+
+def timeSumamente(catalog, category_name):
+    """
+    Carga los datos de los archivos y cargar los datos en la
+    estructura de datos
+    """
+    # TODO: modificaciones para medir el tiempo y memoria
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    getSumamentePositiva(catalog, category_name)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return delta_time, delta_memory
+
+def timeComentarios(catalog, country, numero_videos, tag):
+    """
+    Carga los datos de los archivos y cargar los datos en la
+    estructura de datos
+    """
+    # TODO: modificaciones para medir el tiempo y memoria
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    getComentariosVideos(catalog, country, numero_videos, tag)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return delta_time, delta_memory
+    
 def getLikedVideos(catalog, category_name,country, numerovideos):
     return model.getLikedVideos(catalog, category_name,country, numerovideos)  
 

@@ -115,28 +115,45 @@ while True:
               "Memoria [kB]: ", f"{answer[1]:.3f}")
 
     elif int(inputs[0]) == 2:
+        
         category_name = input("Ingrese la categoria a buscar: ")
         country = input("Ingrese el pais a buscar: ")
         numerovideos = int(input("Ingrese el numero de videos que quiere listar: "))
+        answer= controller.timeLikes(catalog, category_name, country, numerovideos)
         mas_likes = controller.getLikedVideos(catalog, category_name, country, numerovideos)
         printLikedVideos(mas_likes)
 
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
+
     elif int(inputs[0]) == 3:
         country = input("Ingrese el pais a buscar: ")
+        answer= controller.timeAltamente(catalog, country)
         trending_positiva = controller.getAltamentePositiva(catalog, country)
         printAltamentePositiva(trending_positiva)
 
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
+
     elif int(inputs[0]) == 4:
         category_name = input("Ingrese la categoria a buscar: ")
+        answer= controller.timeSumamente(catalog, category_name)
         trending_positiva = controller.getSumamentePositiva(catalog, category_name)
         printSumamentePositiva(trending_positiva)
+
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
 
     elif int(inputs[0]) == 5:
         country = input("Ingrese el pais a buscar: ")
         numero_videos = int(input("Ingrese el numero de videos que quiere listar: "))
         tag = input("Ingrese la etiqueta del video: ")
+        answer= controller.timeComentarios(catalog, country, numero_videos, tag)
         mas_comentarios = controller.getComentariosVideos(catalog, country, numero_videos, tag)
         printComentariosVideos(mas_comentarios)
+
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
 
     else:
         sys.exit(0)
