@@ -23,11 +23,11 @@
 import config as cf
 import sys
 import controller
-from DISClib.ADT import list as lt
 assert cf
 
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 
 """
 La vista se encarga de la interacción con el usuario
@@ -40,12 +40,13 @@ def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- Consultar los videos con mas likes")
-    print("3- Consultar  el video trending el mayor numero de dias")
+    print("3- Consultar el video trending el mayor numero de dias")
     print("4- Consultar video trending con percepcion sumamente positiva")
     print("5- Consultar videos con mas comentarios por tag")
     print("0- Salir")
 
 catalog = None
+
 def initCatalog():
     return controller.initCatalog()
 
@@ -56,6 +57,7 @@ def loadData(catalog):
     """
     controller.loadData(catalog)
 
+
 def printLikedVideos(lista):
     if lista != None:
         for i in range(1,lt.size(lista)+1):
@@ -65,17 +67,22 @@ def printLikedVideos(lista):
     else:
         print('Verifique los datos ingresados.')
 
+
 def printAltamentePositiva(video):
     if video != None:
-        print(tabulate([[video['title'], video['channel_title'], video['country'], video['ratio'], video['days']]], headers=['title', 'channel_title', 'country', 'ratio_likes_dislikes', 'Días'])) 
+        print('title: {} \t channel_title : {} \t country : {} \t ratio_likes_dislikes: {:.2f} \t days: {}'
+            .format(video['title'],video['channel_title'],video['country'],video['ratio'],video['days'])) 
     else:
         print('Verifique los datos ingresados.')  
 
+
 def printSumamentePositiva(video):
     if video != None:
-        print(tabulate([[video['title'], video['channel_title'], video['category_id'], video['ratio'], video['days']]], headers=['title', 'channel_title', 'category_id', 'ratio_likes_dislikes', 'Días']))
+        print('title: {} \t channel_title : {} \t category_id : {} \t ratio: {:.2f} \t days: {}'
+            .format(video['title'],video['channel_title'],video['category_id'],video['ratio'],video['days']))
     else:
         print('Verifique los datos ingresados.')   
+
 
 def printComentariosVideos(lista):
     if lista != None:
@@ -85,6 +92,7 @@ def printComentariosVideos(lista):
             .format(video['title'],video['channel_title'],video['publish_time'],video['views'],video['likes'],video['dislikes'],video['comment_count'],video['tags']))
     else:
         print('Verifique los datos ingresados.')
+
 
 """
 Menu principal
