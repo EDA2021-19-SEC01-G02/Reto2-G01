@@ -77,12 +77,13 @@ def addVideo(catalog, video):
 
     if mp.contains(catalog['countries'], video['country'].lower().strip()):
         country = me.getValue(mp.get(catalog['countries'], video['country'].lower().strip()))
+        #mp.get me da la pareja lalve valor pero como solo necesito el valor por eso hago el .getValue
         lt.addLast(country['videos'], video)
     else:
         addCountry(catalog, video['country'].lower().strip())
         country = me.getValue(mp.get(catalog['countries'], video['country'].lower().strip()))
         lt.addLast(country['videos'], video)
-
+        #si no esta el pais entonces, se crea el nuevo pais con el nombre y la lista de videos y des pues se adiciona 
     cat = me.getValue(mp.get(catalog['categories'], video['category_id']))
     lt.addLast(catalog['videos'], video)
     lt.addLast(cat['videos'], video)
